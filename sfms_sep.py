@@ -179,6 +179,18 @@ print(df_comb.shape)
 df_comb.to_csv('combined.csv')
 
 #%%
+##---------------------
+## read in combined sample
+##---------------------
+file8 = Table.read('/Users/hannahchristie/Documents/GitHub/GSWLC_matched/combined.csv')
+file8.keep_columns(['LOGMSTAR', 'LOGSFRSED'])
+df_comb = file8.to_pandas()
+#df = df[df.Z < 0.05]
+#df_glsb = df_glsb[df_jun.LOGMSTAR > -99]
+#df_glsb = df_glsb[df_glsb.LOGSFRSED > - 99]
+print(df_comb.shape)
+
+#%%
 ##-------------------
 ## plot distribution of LOGMSTAR
 ##-------------------
