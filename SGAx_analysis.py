@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 #import seaborn as sns
 from astropy.cosmology import FlatLambdaCDM
 from astropy.table import Table
+from astropy import units as u
 from scipy import stats
 from scipy.optimize import curve_fit
 cosmo = FlatLambdaCDM(H0=70, Om0=0.3)
@@ -50,13 +51,16 @@ df_dlsb = file7.to_pandas()
 #df_glsb = df_glsb[df_glsb.LOGSFRSED > - 99]
 print(df_dlsb.shape)
 
+#%%
+df['D25'] = (cosmo.angular_diameter_distance(df['Z']))*(df['D25_LEDA']*u.arcmin.to('', equivalencies=u.dimensionless_angles()))*1e3
+
 
 #%%
 ##-------------------
 ## plot distribution of D25_LEDA
 ##-------------------
-plt.hist(df.D25_LEDA, bins = 50)
-plt.xlabel('D25_LEDA (arcmin)')
+plt.hist(df.D25, bins = 50)
+plt.xlabel('D25 (kpc)')
 plt.ylabel('Count')
 plt.show()
 
@@ -85,19 +89,19 @@ paramsC = -0.01967605
 ##-------------------
 ## plot combined SFMS
 ##-------------------
-plt.scatter(df.LOGMSTAR, df.LOGSFRSED, c = df.D25_LEDA, cmap = 'viridis', vmin = 0.25, vmax = 1, s = 10, label = 'combined LSBs')
+plt.scatter(df.LOGMSTAR, df.LOGSFRSED, c = df.D25, cmap = 'cool_r', vmin = 10, vmax = 100, s = 10, label = 'combined LSBs')
 #plt.scatter(df_glsb.LOGMSTAR, df_glsb.LOGSFR, c = 'red', s = 10, alpha = 0.5, label = 'Du 2023 LSBs')
 #plt.scatter(df_dlsb.LOGMSTAR, df_dlsb.LOGSFR, c = 'red', s = 10, alpha = 0.5, label = 'McGaugh 2017 LSBs')
 #plt.scatter(np.log10(2.7*10**7), np.log10(0.002), marker = '*', c = 'teal', s = 50, label = 'LSBG-285')
 #plt.scatter(np.log10(2.3*10**7), np.log10(0.009), marker = '*', c = 'deeppink', s = 50, label = 'LSBG-750')
 
 plt.plot(x_fit, curve_func(x_fit, paramsA, paramsB, paramsC), c = 'black', label = 'curve fit')
-plt.plot(x_fit, curve_func(x_fit, paramsA, paramsB, paramsC)+0.4, c = 'grey', linestyle = '--')
+plt.plot(x_fit, curve_func(x_fit, paramsA, paramsB, paramsC)+0.4, c = 'grey', linestyle = '--', label = '$\pm$ 0.4 dex')
 plt.plot(x_fit, curve_func(x_fit, paramsA, paramsB, paramsC)-0.4, c = 'grey', linestyle = '--')
 plt.xlabel('LOGMSTAR $M_\odot$')
 plt.ylabel('LOGSFR $M_\odot yr^{-1}$')
 cbar = plt.colorbar()
-cbar.set_label('D25_LEDA', fontsize = 15)
+cbar.set_label('$D_{25}$ (kpc)', fontsize = 15)
 plt.legend()
 plt.show()
 
@@ -106,33 +110,35 @@ plt.show()
 ##-------------------
 ## plot size (D25)- stellar mass relation
 ##-------------------
-plt.scatter(df.LOGMSTAR, df.D25_LEDA, c = df.SB_D25_LEDA, cmap = 'spring', s = 10, label = 'combined LSBs')
+plt.scatter(df.LOGMSTAR, df.D25, c = df.SB_D25_LEDA, cmap = 'spring', s = 10, label = 'combined LSBs')
 #plt.scatter(df_glsb.LOGMSTAR, df_glsb.LOGSFR, c = 'black', s = 10, alpha = 0.5, label = 'Du 2023 LSBs')
 #plt.scatter(df_dlsb.LOGMSTAR, df_dlsb.LOGSFR, c = 'black', s = 10, alpha = 0.5, label = 'McGaugh 2017 LSBs')
 #plt.plot(x_fit, curve_func(x_fit, paramsA, paramsB, paramsC), c = 'black', label = 'curve fit')
 #plt.plot(x_fit, curve_func(x_fit, paramsA, paramsB, paramsC)+0.4, c = 'grey', linestyle = '--')
 #plt.plot(x_fit, curve_func(x_fit, paramsA, paramsB, paramsC)-0.4, c = 'grey', linestyle = '--')
 plt.xlabel('LOGMSTAR $M_\odot$')
-plt.ylabel('D25_LEDA (arcmin)')
+plt.ylabel('$D_{25}$ (kpc)')
 cbar = plt.colorbar()
-cbar.set_label('SB D25', fontsize = 15)
+cbar.set_label('SB $D_{25}$', fontsize = 15)
 plt.legend()
+plt.ylim(0, 120)
 plt.show()
 
 #%%
 ##-------------------
 ## plot size (D25)- stellar mass relation
 ##-------------------
-plt.scatter(df.LOGMSTAR, df.D25_LEDA, c = df.SB_D25_LEDA, cmap = 'spring', s = 10, label = 'combined LSBs')
+plt.scatter(df.LOGMSTAR, df.D25, c = df.SB_D25_LEDA, cmap = 'spring', s = 20, label = 'combined LSBs')
 #plt.scatter(df_glsb.LOGMSTAR, df_glsb.LOGSFR, c = 'black', s = 10, alpha = 0.5, label = 'Du 2023 LSBs')
 #plt.scatter(df_dlsb.LOGMSTAR, df_dlsb.LOGSFR, c = 'black', s = 10, alpha = 0.5, label = 'McGaugh 2017 LSBs')
 #plt.plot(x_fit, curve_func(x_fit, paramsA, paramsB, paramsC), c = 'black', label = 'curve fit')
 #plt.plot(x_fit, curve_func(x_fit, paramsA, paramsB, paramsC)+0.4, c = 'grey', linestyle = '--')
 #plt.plot(x_fit, curve_func(x_fit, paramsA, paramsB, paramsC)-0.4, c = 'grey', linestyle = '--')
 plt.xlabel('LOGMSTAR $M_\odot$')
-plt.ylabel('D25_LEDA (arcmin)')
+plt.ylabel('$D_{25}$ (kpc)')
 cbar = plt.colorbar()
 cbar.set_label('SB D25', fontsize = 15)
+plt.ylim(0, 120)
 plt.legend()
 plt.show()
 
@@ -141,15 +147,16 @@ plt.show()
 ##-------------------
 ## plot combined SFMS with SB as colour
 ##-------------------
+x_vals = np.linspace(min(df.LOGMSTAR), max(df.LOGMSTAR), 100)
 plt.scatter(df.LOGMSTAR, df.LOGSFRSED, c = df.SB_D25_LEDA, cmap = 'spring', s = 10, label = 'combined LSBs')
 #plt.scatter(df_glsb.LOGMSTAR, df_glsb.LOGSFR, c = 'red', s = 10, alpha = 0.5, label = 'Du 2023 LSBs')
 #plt.scatter(df_dlsb.LOGMSTAR, df_dlsb.LOGSFR, c = 'red', s = 10, alpha = 0.5, label = 'McGaugh 2017 LSBs')
 #plt.scatter(np.log10(2.7*10**7), np.log10(0.002), marker = '*', c = 'teal', s = 50, label = 'LSBG-285')
 #plt.scatter(np.log10(2.3*10**7), np.log10(0.009), marker = '*', c = 'deeppink', s = 50, label = 'LSBG-750')
 
-plt.plot(x_fit, curve_func(x_fit, paramsA, paramsB, paramsC), c = 'black', label = 'curve fit')
-plt.plot(x_fit, curve_func(x_fit, paramsA, paramsB, paramsC)+0.4, c = 'grey', linestyle = '--')
-plt.plot(x_fit, curve_func(x_fit, paramsA, paramsB, paramsC)-0.4, c = 'grey', linestyle = '--')
+plt.plot(x_vals, curve_func(x_vals, paramsA, paramsB, paramsC), c = 'black', label = 'curve fit')
+plt.plot(x_vals, curve_func(x_vals, paramsA, paramsB, paramsC)+0.4, c = 'grey', linestyle = '--')
+plt.plot(x_vals, curve_func(x_vals, paramsA, paramsB, paramsC)-0.4, c = 'grey', linestyle = '--')
 plt.xlabel('LOGMSTAR $M_\odot$')
 plt.ylabel('LOGSFR $M_\odot yr^{-1}$')
 cbar = plt.colorbar()

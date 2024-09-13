@@ -47,7 +47,7 @@ print(slope, intercept)
 ##-------------------
 ## plot combined SFMS
 ##-------------------
-plt.scatter(df.LOGMSTAR, df.logMHI, c = 'red', s = 10, label = 'combined LSBs')
+plt.scatter(df.LOGMSTAR, df.logMHI, c = 'red', s = 25, label = 'combined LSBs')
 #plt.scatter(df_glsb.LOGMSTAR, df_glsb.LOGSFR, c = 'red', s = 10, alpha = 0.5, label = 'Du 2023 LSBs')
 #plt.scatter(df_dlsb.LOGMSTAR, df_dlsb.LOGSFR, c = 'red', s = 10, alpha = 0.5, label = 'McGaugh 2017 LSBs')
 #plt.scatter(np.log10(2.7*10**7), np.log10(0.002), marker = '*', c = 'teal', s = 50, label = 'LSBG-285')
